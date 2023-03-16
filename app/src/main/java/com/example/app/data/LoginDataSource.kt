@@ -25,12 +25,8 @@ class LoginDataSource {
 
 
 
-
-            return Result.Success(
-                LoggedInUser(
-                    username
-                )
-            )
+            var validUser = LoggedInUser(username)
+            return Result.Success(validUser)
         } catch (e: Throwable) {
             return Result.Error(IOException("Error logging in", e))
         }
