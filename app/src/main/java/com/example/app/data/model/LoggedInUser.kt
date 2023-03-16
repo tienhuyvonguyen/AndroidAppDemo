@@ -5,5 +5,8 @@ package com.example.app.data.model
  */
 data class LoggedInUser(
     val displayName: String
-
-)
+) {
+    fun getDisplayName(): LoggedInUser {
+        return LoggedInUser(displayName)
+    }
+}
