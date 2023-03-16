@@ -6,5 +6,4 @@ package com.example.app.data.model
 data class LoggedInUser(
     val displayName: String
 
-
 )

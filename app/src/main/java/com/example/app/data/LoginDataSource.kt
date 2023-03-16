@@ -18,14 +18,18 @@ class LoginDataSource {
         try {
             val executor = Executors.newSingleThreadExecutor()
             // TODO: handle loggedInUser authentication
-
-
-
-
-
-
-
-            var validUser = LoggedInUser(username)
+            val client = OkHttpsClient()
+            executor.execute(
+                Runnable {
+                    try {
+                        val response = client.doLogin(username, password)
+                        println(response.toString())
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            )
+            val validUser = LoggedInUser(username)
             return Result.Success(validUser)
         } catch (e: Throwable) {
             return Result.Error(IOException("Error logging in", e))
