@@ -4,7 +4,6 @@ package com.example.app.data
 
 import com.example.app.data.model.LoggedInUser
 import com.example.app.network.OkHttpsClient
-import okhttp3.OkHttpClient
 import java.io.IOException
 import java.util.concurrent.Executors
 
@@ -19,16 +18,10 @@ class LoginDataSource {
             val executor = Executors.newSingleThreadExecutor()
             // TODO: handle loggedInUser authentication
             val client = OkHttpsClient()
-            executor.execute(
-                Runnable {
-                    try {
-                        val response = client.doLogin(username, password)
-                        println(response.toString())
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
-            )
+            executor.execute {
+                println("LoginDataSource: login: ${client.doLogin(username, password)}")
+                println("debug")
+            }
             val validUser = LoggedInUser(username)
             return Result.Success(validUser)
         } catch (e: Throwable) {
