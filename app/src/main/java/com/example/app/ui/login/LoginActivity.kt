@@ -59,11 +59,11 @@ class LoginActivity : AppCompatActivity() {
             }
             if (loginResult.success != null) {
                 updateUiWithUser(loginResult.success)
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
             }
+
             setResult(Activity.RESULT_OK)
-            // switch to main activity
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
             //Complete and destroy login activity once successful
             finish()
         })

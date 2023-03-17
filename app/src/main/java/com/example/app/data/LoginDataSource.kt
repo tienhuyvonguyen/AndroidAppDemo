@@ -16,17 +16,12 @@ class LoginDataSource {
     fun login(username: String, password: String): Result<LoggedInUser> {
         try {
             val executor = Executors.newSingleThreadExecutor()
-            val validUser = LoggedInUser("")
             // TODO: handle loggedInUser authentication
             val client = OkHttpsClient()
-            executor.execute {
-                println("LoginDataSource: login: ${client.doLogin(username, password)}")
-                LoggedInUser(username)
+            val result = executor.execute {
+                client.doLogin(username, password)
             }
-            if (validUser.displayName == "") {
-                return Result.Error(IOException("Error logging in"))
-            }
-            return Result.Success(validUser)
+            return Result.Success(LoggedInUser(username))
         } catch (e: Throwable) {
             return Result.Error(IOException("Error logging in", e))
         }
