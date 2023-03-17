@@ -3,9 +3,6 @@ package com.example.app.ui.home
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import android.content.Context
-import android.content.Intent
-import android.support.v4.content.ContextCompat.startActivity
 import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.Response
@@ -13,12 +10,11 @@ import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.app.AppContext
-import com.example.app.ui.login.LoginActivity
 
-class HomeViewModel : ViewModel() {
+class InfoViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
+        value = "This is info Fragment"
     }
     val text: LiveData<String> = _text
 

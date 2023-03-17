@@ -7,11 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.example.app.databinding.FragmentHomeBinding
+import com.example.app.databinding.FragmentInfoBinding
 
-class HomeFragment : Fragment() {
+class InfoFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: FragmentInfoBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -26,9 +26,9 @@ class HomeFragment : Fragment() {
             ViewModelProvider(
                 this,
                 ViewModelProvider.NewInstanceFactory()
-            ).get(HomeViewModel::class.java)
+            ).get(InfoViewModel::class.java)
 
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentInfoBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val textView: TextView = binding.textHome

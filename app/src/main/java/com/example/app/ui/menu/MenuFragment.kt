@@ -1,4 +1,4 @@
-package com.example.app.ui.dashboard
+package com.example.app.ui.menu
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,11 +7,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.support.v4.app.Fragment
 import android.arch.lifecycle.ViewModelProvider
-import com.example.app.databinding.FragmentDashboardBinding
+import android.view.Menu
+import com.example.app.databinding.FragmentMenuBinding
 
-class DashboardFragment : Fragment() {
+class MenuFragment : Fragment() {
 
-    private var _binding: FragmentDashboardBinding? = null
+    private var _binding: FragmentMenuBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -26,9 +27,9 @@ class DashboardFragment : Fragment() {
             ViewModelProvider(
                 this,
                 ViewModelProvider.NewInstanceFactory()
-            ).get(DashboardViewModel::class.java)
+            ).get(MenuViewModel::class.java)
 
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        _binding = FragmentMenuBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val textView: TextView = binding.textDashboard

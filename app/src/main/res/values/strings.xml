@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DemoApp</string>
+    <string name="app_name">MEME SHOP</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -11,7 +11,8 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="invalid_email">Email not valid</string>
     <string name="login_failed">"Login failed"</string>
-    <string name="title_info">Personal Information</string>
+    <string name="title_info">PI</string>
+    <string name="long_title_info">Personal</string>
     <string name="title_menu">Menu</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_cart">Cart</string>
