@@ -1,12 +1,12 @@
 package com.example.app.ui.home
 
+import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.support.v4.app.Fragment
-import android.arch.lifecycle.ViewModelProvider
 import com.example.app.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -42,4 +42,5 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
 }

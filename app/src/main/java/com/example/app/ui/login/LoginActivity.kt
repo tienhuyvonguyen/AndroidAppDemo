@@ -1,25 +1,22 @@
 package com.example.app.ui.login
 
-import android.app.Activity
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
 import android.content.Intent
 import android.os.Bundle
-import android.support.annotation.StringRes
 import android.support.v7.app.AppCompatActivity
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.View
-import android.view.inputmethod.EditorInfo
-import android.widget.EditText
 import android.widget.Toast
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.VolleyError
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.example.app.MainActivity
 import com.example.app.R
 import com.example.app.databinding.ActivityLoginBinding
+import com.example.app.ui.register.RegisterActivity
+
 
 class LoginActivity : AppCompatActivity() {
 
-    private lateinit var loginViewModel: LoginViewModel
     private lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,101 +28,79 @@ class LoginActivity : AppCompatActivity() {
         val username = binding.username
         val password = binding.password
         val login = binding.login
-        val loading = binding.loading
+        val signup = binding.register
 
-        loginViewModel =
-            ViewModelProvider(this, LoginViewModelFactory()).get(LoginViewModel::class.java)
-
-        loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
-            val loginState = it ?: return@Observer
-
-            // disable login button unless both username / password is valid
-            login.isEnabled = loginState.isDataValid
-
-            if (loginState.usernameError != null) {
-                username.error = getString(loginState.usernameError)
-            }
-            if (loginState.passwordError != null) {
-                password.error = getString(loginState.passwordError)
-            }
-        })
-
-        loginViewModel.loginResult.observe(this@LoginActivity, Observer {
-            val loginResult = it ?: return@Observer
-
-            loading.visibility = View.GONE
-            if (loginResult.error != null) {
-                showLoginFailed(loginResult.error)
-            }
-            if (loginResult.success != null) {
-                updateUiWithUser(loginResult.success)
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-            }
-
-            setResult(Activity.RESULT_OK)
-            //Complete and destroy login activity once successful
-            finish()
-        })
-
-        username.afterTextChanged {
-            loginViewModel.loginDataChanged(
-                username.text.toString(), password.text.toString()
-            )
+        signup?.setOnClickListener {
+            register()
         }
 
-        password.apply {
-            afterTextChanged {
-                loginViewModel.loginDataChanged(
-                    username.text.toString(), password.text.toString()
-                )
-            }
-
-            setOnEditorActionListener { _, actionId, _ ->
-                when (actionId) {
-                    EditorInfo.IME_ACTION_DONE -> loginViewModel.login(
-                        username.text.toString(), password.text.toString()
-                    )
-                }
-                false
-            }
-
-            login.setOnClickListener {
-                loading.visibility = View.VISIBLE
-                loginViewModel.login(username.text.toString(), password.text.toString())
+        login.setOnClickListener {
+            val testInput = loginDataChange(username.text.toString(), password.text.toString())
+            if (testInput) {
+                doLogin(username.text.toString(), password.text.toString())
             }
         }
-
     }
 
-    private fun updateUiWithUser(model: LoggedInUserView) {
-        val welcome = getString(R.string.welcome)
-        val displayName = model.displayName
-        // TODO : initiate successful logged in experience
-        Toast.makeText(
-            applicationContext, "$welcome $displayName", Toast.LENGTH_LONG
-        ).show()
-    }
-
-    private fun showLoginFailed(@StringRes errorString: Int) {
-        Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
-        // refresh login page
-        val intent = Intent(this, LoginActivity::class.java)
+    private fun register() {
+        val intent = Intent(this, RegisterActivity::class.java)
         startActivity(intent)
     }
-}
 
-/**
- * Extension function to simplify setting an afterTextChanged action to EditText components.
- */
-fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
-    this.addTextChangedListener(object : TextWatcher {
-        override fun afterTextChanged(editable: Editable?) {
-            afterTextChanged.invoke(editable.toString())
+    private fun loginDataChange(username: String, password: String): Boolean {
+        if (!isUserNameValid(username)) {
+            binding.username.error = getString(R.string.invalid_username)
+            Toast.makeText(applicationContext, "Invalid Username", Toast.LENGTH_SHORT).show()
+        } else if (!isPasswordValid(password)) {
+            binding.password.error = getString(R.string.invalid_password)
+            Toast.makeText(applicationContext, "Invalid Password", Toast.LENGTH_SHORT).show()
+        } else {
+            return true
         }
+        return false
+    }
 
-        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+    private fun doLogin(username: String, password: String) {
+        val url = "http://143.42.66.73:9090/public/api/login.php"
+        val queue = Volley.newRequestQueue(this@LoginActivity)
+        val req: StringRequest = object : StringRequest(
+            Request.Method.POST, url,
+            Response.Listener<String> { response: String ->
+                Toast.makeText(this@LoginActivity, "Login Success", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+            },
+            Response.ErrorListener { error: VolleyError ->
+                Toast.makeText(
+                    this@LoginActivity,
+                    "Fail to get response = $error",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }) {
+            override fun getParams(): Map<String, String> {
+                // below line we are creating a map for
+                // storing our values in key and value pair.
+                val params: MutableMap<String, String> = HashMap()
 
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-    })
+                // on below line we are passing our key
+                // and value pair to our parameters.
+                params["username"] = username
+                params["password"] = password
+
+                // at last we are
+                // returning our params.
+                return params
+            }
+        }
+        queue.add(req)
+    }
+
+    private fun isPasswordValid(password: String): Boolean {
+        return password.length > 6
+    }
+
+    private fun isUserNameValid(username: String): Boolean {
+        return username.length > 3
+    }
+
 }
