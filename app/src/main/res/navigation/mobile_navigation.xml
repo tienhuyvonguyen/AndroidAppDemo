@@ -14,7 +14,7 @@
 
     <fragment
         android:id="@+id/navigation_menu"
-        android:name="com.example.app.ui.menu.DashboardFragment"
+        android:name="com.example.app.ui.menu.MenuFragment"
         android:label="@string/title_menu"
         tools:layout="@layout/fragment_menu" />
 
