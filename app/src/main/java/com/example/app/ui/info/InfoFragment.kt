@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.example.app.data.model.UserModel
 import com.example.app.databinding.FragmentInfoBinding
 import com.example.app.utility.TinyDB
 
@@ -33,7 +34,6 @@ class InfoFragment : Fragment() {
         val root: View = binding.root
 
         getUserInformation()
-
         val textView: TextView = binding.textHome
         homeViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
@@ -46,7 +46,6 @@ class InfoFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 
     private fun getUserInformation() {
         val infoModel = InfoViewModel()
