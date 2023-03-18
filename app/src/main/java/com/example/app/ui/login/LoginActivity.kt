@@ -13,6 +13,8 @@ import com.example.app.MainActivity
 import com.example.app.R
 import com.example.app.databinding.ActivityLoginBinding
 import com.example.app.ui.register.RegisterActivity
+import com.example.app.utility.TinyDB
+import org.json.JSONObject
 
 
 class LoginActivity : AppCompatActivity() {
@@ -30,7 +32,7 @@ class LoginActivity : AppCompatActivity() {
         val login = binding.login
         val signup = binding.register
 
-        signup?.setOnClickListener {
+        signup.setOnClickListener {
             register()
         }
 
@@ -67,13 +69,12 @@ class LoginActivity : AppCompatActivity() {
             Request.Method.POST, url,
             Response.Listener<String> { response: String ->
                 Toast.makeText(this@LoginActivity, "Login Success", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
+                onLoginSuccess(response, username)
             },
             Response.ErrorListener { error: VolleyError ->
                 Toast.makeText(
                     this@LoginActivity,
-                    "Fail to get response = $error",
+                    "Connection Failed: $error",
                     Toast.LENGTH_SHORT
                 ).show()
             }) {
@@ -103,4 +104,15 @@ class LoginActivity : AppCompatActivity() {
         return username.length > 3
     }
 
+    private fun onLoginSuccess(resp: String, username: String) {
+        val jsonObject = JSONObject(resp)
+        val token = jsonObject.getString("token")
+        val tinyDB = TinyDB(this)
+        tinyDB.clear()
+        tinyDB.putString("token", token)
+        tinyDB.putString("username", username)
+        Toast.makeText(this, "Token: $token", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+    }
 }

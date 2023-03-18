@@ -10,6 +10,11 @@ import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.app.AppContext
+import com.example.app.data.model.Product
+import com.example.app.data.model.UserModel
+import com.example.app.utility.TinyDB
+import org.json.JSONObject
+import java.time.format.DateTimeFormatter
 
 class InfoViewModel : ViewModel() {
 
@@ -18,42 +23,47 @@ class InfoViewModel : ViewModel() {
     }
     val text: LiveData<String> = _text
 
-    private fun doGetProduct(username: String, password: String, email: String) {
+    public fun doGetUserInfo(username: String) {
         val context = AppContext.getContext()
-        val url = "http://143.42.66.73:9090/api/product/read.php?view=all"
         val queue = Volley.newRequestQueue(context)
-        val req: StringRequest = object : StringRequest(
-            Request.Method.POST, url,
-            Response.Listener<String> { response: String ->
-                Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
-                Toast.makeText(context, "Response is $response", Toast.LENGTH_SHORT).show()
-                organizeData(response)
+        val url = "http://143.42.66.73:9090/api/user/read.php?view=single&username=$username"
+        val resp : StringRequest = object : StringRequest(
+            Request.Method.GET, url,
+            Response.Listener { response ->
+                val jObject = JSONObject(response)
+                val jSearchData = jObject.getJSONArray("user").getJSONObject(0)
+                val issuer = jSearchData.getString("username")
+                val email = jSearchData.getString("userEmail")
+                val firstname = jSearchData.getString("firstname")
+                val lastname = jSearchData.getString("lastname")
+                val phone = jSearchData.getString("phone")
+                val balance = jSearchData.getString("balance")
+                val avatar = jSearchData.getString("avatar")
+                val premiumTier = jSearchData.getString("premiumTier")
+                val creditCard = jSearchData.getString("creditCard")
+                val issueUser = UserModel(email, issuer, firstname, lastname, phone, creditCard, avatar, balance.toDouble(), premiumTier.toInt())
+                val tinyDB = TinyDB(context)
+                tinyDB.putObject("user", issueUser)
+                println(issueUser.toString())
+                Toast.makeText(context, "Welcome $username", Toast.LENGTH_SHORT).show()
             },
-            Response.ErrorListener { error: VolleyError ->
-                Toast.makeText(
-                    context,
-                    "Fail to get response = $error",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }) {
-            override fun getParams(): Map<String, String> {
-                // below line we are creating a map for
-                // storing our values in key and value pair.
-                val params: MutableMap<String, String> = HashMap()
+            Response.ErrorListener { error ->
+                Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+            }
+        ) {
 
-                // on below line we are passing our key
-                // and value pair to our parameters.
-                params["username"] = username
-                params["password"] = password
-                params["email"] = email
-                // at last we are
-                // returning our params.
-                return params
+            override fun getBodyContentType(): String {
+                return "application/json; charset=utf-8"
+            }
+
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                headers["Content-Type"] = "application/json"
+                val tinyDB = TinyDB(context)
+                headers["Authorization"] = "Bearer " + tinyDB.getString("token")
+                return headers
             }
         }
-        queue.add(req)
-    }
-    // TODO: handle the resp and show the data in the recycler view
-    private fun organizeData(Response: String) {
+        queue.add(resp)
     }
 }

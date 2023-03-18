@@ -43,6 +43,7 @@ class MenuViewModel : ViewModel() {
                 }
                 // TODO: Organize data in list of products and send to adapter
 
+                Toast.makeText(context, "Connection Success", Toast.LENGTH_SHORT).show()
             },
             Response.ErrorListener { error ->
                 Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()

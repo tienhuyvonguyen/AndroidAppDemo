@@ -1,5 +1,6 @@
 package com.example.app.data.model;
 
+
 public class Product {
     private String productID;
     private String name;
@@ -56,5 +57,10 @@ public class Product {
 
     public void setStock(Integer stock) {
         this.stock = stock;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" + "productID=" + productID + ", name=" + name + ", picture=" + picture + ", price=" + price + ", stock=" + stock + '}';
     }
 }

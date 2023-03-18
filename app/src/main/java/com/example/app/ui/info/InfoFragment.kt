@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.example.app.databinding.FragmentInfoBinding
-import com.example.app.ui.menu.MenuViewModel
+import com.example.app.utility.TinyDB
 
 class InfoFragment : Fragment() {
 
@@ -32,6 +32,8 @@ class InfoFragment : Fragment() {
         _binding = FragmentInfoBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        getUserInformation()
+
         val textView: TextView = binding.textHome
         homeViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
@@ -45,7 +47,11 @@ class InfoFragment : Fragment() {
         _binding = null
     }
 
-    private fun getProducts() {
 
+    private fun getUserInformation() {
+        val infoModel = InfoViewModel()
+        val tinyDB = TinyDB(context)
+        val username = tinyDB.getString("username")
+        infoModel.doGetUserInfo(username)
     }
 }
