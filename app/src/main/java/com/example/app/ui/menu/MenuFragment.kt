@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.support.v4.app.Fragment
 import android.arch.lifecycle.ViewModelProvider
-import android.view.Menu
 import com.example.app.databinding.FragmentMenuBinding
 
 class MenuFragment : Fragment() {
@@ -18,12 +17,14 @@ class MenuFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    private lateinit var menuViewModel: MenuViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val dashboardViewModel =
+        menuViewModel =
             ViewModelProvider(
                 this,
                 ViewModelProvider.NewInstanceFactory()
@@ -32,15 +33,22 @@ class MenuFragment : Fragment() {
         _binding = FragmentMenuBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textDashboard
-        dashboardViewModel.text.observe(viewLifecycleOwner) {
+        getProductsAndShow()
+        val textView: TextView = binding.textMenu
+        menuViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
         return root
+
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun getProductsAndShow() {
+        val getProduct = MenuViewModel().doGetProducts()
+
     }
 }

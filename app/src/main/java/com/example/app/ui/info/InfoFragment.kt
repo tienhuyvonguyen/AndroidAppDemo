@@ -1,4 +1,4 @@
-package com.example.app.ui.home
+package com.example.app.ui.info
 
 import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.example.app.databinding.FragmentInfoBinding
+import com.example.app.ui.menu.MenuViewModel
 
 class InfoFragment : Fragment() {
 
@@ -36,6 +37,7 @@ class InfoFragment : Fragment() {
             textView.text = it
         }
         return root
+
     }
 
     override fun onDestroyView() {
@@ -43,4 +45,7 @@ class InfoFragment : Fragment() {
         _binding = null
     }
 
+    private fun getProducts() {
+
+    }
 }

@@ -1,4 +1,4 @@
-package com.example.app.ui.home
+package com.example.app.ui.info
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
