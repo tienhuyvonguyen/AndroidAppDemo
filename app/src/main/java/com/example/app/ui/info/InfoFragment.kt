@@ -1,15 +1,23 @@
 package com.example.app.ui.info
 
 import android.arch.lifecycle.ViewModelProvider
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
+import android.widget.Toast
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import com.example.app.AppContext
+import com.example.app.data.model.UserModel
 import com.example.app.databinding.FragmentInfoBinding
+import com.example.app.ui.login.LoginActivity
 import com.example.app.utility.TinyDB
+import org.json.JSONObject
 
 class InfoFragment : Fragment() {
 
@@ -18,13 +26,15 @@ class InfoFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-    private val logoutButton get() = binding.logoutButton
+
+    private lateinit var infoView: InfoViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
+        infoView =
             ViewModelProvider(
                 this,
                 ViewModelProvider.NewInstanceFactory()
@@ -33,21 +43,14 @@ class InfoFragment : Fragment() {
         _binding = FragmentInfoBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        getUserInformation()
-
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+        binding.logoutButton.setOnClickListener {
+            doLogout()
         }
 
-
-        val button: Button = binding.logoutButton
-        button.setOnClickListener {
-            logout()
-        }
+        val tinyDBObj = TinyDB(AppContext.getContext())
+        doGetUserInfo(tinyDBObj.getString("username"))
 
         return root
-
     }
 
     override fun onDestroyView() {
@@ -55,15 +58,74 @@ class InfoFragment : Fragment() {
         _binding = null
     }
 
-    private fun getUserInformation() {
-        val infoModel = InfoViewModel()
-        val tinyDB = TinyDB(context)
-        val username = tinyDB.getString("username")
-        infoModel.doGetUserInfo(username)
+    private fun doGetUserInfo(username: String) {
+        val context = AppContext.getContext()
+        val queue = Volley.newRequestQueue(context)
+        val tinyDBObj = TinyDB(context)
+        val url = "http://143.42.66.73:9090/api/user/read.php?view=single&username=$username"
+        val resp: StringRequest = object : StringRequest(
+            Request.Method.GET, url,
+            Response.Listener { response ->
+                handleJson(response)
+            },
+            Response.ErrorListener { error ->
+                Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+            }
+        ) {
+
+            override fun getBodyContentType(): String {
+                return "application/json; charset=utf-8"
+            }
+
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                headers["Content-Type"] = "application/json"
+                headers["Authorization"] = "Bearer " + tinyDBObj.getString("token")
+                return headers
+            }
+        }
+        queue.add(resp)
     }
 
-    private fun logout() {
-        val infoModel = InfoViewModel()
-        infoModel.doLogout()
+    private fun handleJson(response: String) {
+        val tinyDBObj = TinyDB(AppContext.getContext())
+        val jObject = JSONObject(response)
+        val jSearchData = jObject.getJSONArray("user").getJSONObject(0)
+        val issuer = jSearchData.getString("username")
+        val textView = binding.userName
+        textView.text = issuer
+        val email = jSearchData.getString("userEmail")
+        val textView2 = binding.userEmail
+        textView2.text = email
+        val firstname = jSearchData.getString("firstname")
+        val lastname = jSearchData.getString("lastname")
+        val phone = jSearchData.getString("phone")
+        val balance = jSearchData.getString("balance")
+        val avatar = jSearchData.getString("avatar")
+        val premiumTier = jSearchData.getString("premiumTier")
+        val creditCard = jSearchData.getString("creditCard")
+        val issueUser = UserModel(
+            email,
+            issuer,
+            firstname,
+            lastname,
+            phone,
+            creditCard,
+            avatar,
+            balance.toDouble(),
+            premiumTier.toInt()
+        )
+        tinyDBObj.putObject("user", issueUser)
+    }
+
+    private fun doLogout() {
+        val context = AppContext.getContext()
+        val tinyDBObj = TinyDB(context)
+        tinyDBObj.remove("token")
+        tinyDBObj.remove("user")
+        tinyDBObj.clear()
+        Toast.makeText(context, "Logout successful", Toast.LENGTH_SHORT).show()
+        val intent = Intent(context, LoginActivity::class.java)
+        context.startActivity(intent)
     }
 }

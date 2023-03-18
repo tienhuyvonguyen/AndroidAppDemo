@@ -3,10 +3,6 @@ package com.example.app.utility;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.app.data.model.AuthenticationResponseModel;
-import com.example.app.data.model.TokenModel;
-import com.example.app.data.model.UserModel;
-
 public class AppPreferenceTools {
 
     private SharedPreferences mPreference;
