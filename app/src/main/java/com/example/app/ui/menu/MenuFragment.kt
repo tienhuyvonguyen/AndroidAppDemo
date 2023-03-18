@@ -48,7 +48,7 @@ class MenuFragment : Fragment() {
     }
 
     private fun getProductsAndShow() {
-        val getProduct = MenuViewModel().doGetProducts()
+        MenuViewModel().doGetProducts()
 
     }
 }

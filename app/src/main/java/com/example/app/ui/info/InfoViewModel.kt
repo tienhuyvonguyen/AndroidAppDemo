@@ -79,12 +79,13 @@ class InfoViewModel : ViewModel() {
         return issueUser
     }
 
-    public fun logout() {
+    fun doLogout() {
         val context = AppContext.getContext()
         val tinyDBObj = TinyDB(context)
         tinyDBObj.remove("token")
         tinyDBObj.remove("user")
         tinyDBObj.clear()
+        Toast.makeText(context, "Logout successful", Toast.LENGTH_SHORT).show()
         val intent = Intent(context, LoginActivity::class.java)
         context.startActivity(intent)
     }

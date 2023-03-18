@@ -111,7 +111,6 @@ class LoginActivity : AppCompatActivity() {
         tinyDB.clear()
         tinyDB.putString("token", token)
         tinyDB.putString("username", username)
-        Toast.makeText(this, "Token: $token", Toast.LENGTH_SHORT).show()
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
     }

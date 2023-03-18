@@ -6,8 +6,8 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
-import com.example.app.data.model.UserModel
 import com.example.app.databinding.FragmentInfoBinding
 import com.example.app.utility.TinyDB
 
@@ -18,7 +18,7 @@ class InfoFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-
+    private val logoutButton get() = binding.logoutButton
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,10 +34,18 @@ class InfoFragment : Fragment() {
         val root: View = binding.root
 
         getUserInformation()
+
         val textView: TextView = binding.textHome
         homeViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
+
+
+        val button: Button = binding.logoutButton
+        button.setOnClickListener {
+            logout()
+        }
+
         return root
 
     }
@@ -52,5 +60,10 @@ class InfoFragment : Fragment() {
         val tinyDB = TinyDB(context)
         val username = tinyDB.getString("username")
         infoModel.doGetUserInfo(username)
+    }
+
+    private fun logout() {
+        val infoModel = InfoViewModel()
+        infoModel.doLogout()
     }
 }

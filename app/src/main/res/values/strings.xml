@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Meme Hook</string>
+    <string name="app_name">Meme Hooker</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>

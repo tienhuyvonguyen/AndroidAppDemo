@@ -1,6 +1,5 @@
 package com.example.app.ui.menu
 
-import android.R
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
@@ -29,21 +28,10 @@ class MenuViewModel : ViewModel() {
         val resp : StringRequest = object : StringRequest(
             Request.Method.GET, url,
             Response.Listener { response ->
-                val jObject = JSONObject(response)
-                val jSearchData = jObject.getJSONArray("products")
-                for (i in 0 until jSearchData.length()) {
-                    val jSearch = jSearchData.getJSONObject(i)
-                    val id = jSearch.getString("productID")
-                    val name = jSearch.getString("name")
-                    val price = jSearch.getString("price")
-                    val picture = jSearch.getString("picture")
-                    val stock = jSearch.getString("stock")
-                    val product = Product(id, name, picture, (price.toDouble()), stock.toInt())
+                val products = handleJson(response)
+                for (product in products) {
                     println(product.toString())
                 }
-                // TODO: Organize data in list of products and send to adapter
-
-                Toast.makeText(context, "Connection Success", Toast.LENGTH_SHORT).show()
             },
             Response.ErrorListener { error ->
                 Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
@@ -61,6 +49,22 @@ class MenuViewModel : ViewModel() {
         val list = ArrayList<Product>()
         list.add(product)
         // show product in list view
+    }
 
+    fun handleJson(response: String): Array<Product> {
+        val jObject = JSONObject(response)
+        val productArray = ArrayList<Product>()
+        val jSearchData = jObject.getJSONArray("products")
+        for (i in 0 until jSearchData.length()) {
+            val jSearch = jSearchData.getJSONObject(i)
+            val id = jSearch.getString("productID")
+            val name = jSearch.getString("name")
+            val price = jSearch.getString("price")
+            val picture = jSearch.getString("picture")
+            val stock = jSearch.getString("stock")
+            val product = Product(id, name, picture, (price.toDouble()), stock.toInt())
+            productArray.add(product)
+        }
+        return productArray.toTypedArray()
     }
 }
