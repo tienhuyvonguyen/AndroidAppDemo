@@ -2,9 +2,8 @@ package com.example.app.ui.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-import com.android.volley.Request
+import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
@@ -66,8 +65,8 @@ class LoginActivity : AppCompatActivity() {
         val url = "http://143.42.66.73:9090/public/api/login.php"
         val queue = Volley.newRequestQueue(this@LoginActivity)
         val req: StringRequest = object : StringRequest(
-            Request.Method.POST, url,
-            Response.Listener<String> { response: String ->
+            Method.POST, url,
+            Response.Listener { response: String ->
                 Toast.makeText(this@LoginActivity, "Login Success", Toast.LENGTH_SHORT).show()
                 onLoginSuccess(response, username)
             },

@@ -1,14 +1,14 @@
 package com.example.app.ui.info
 
-import android.arch.lifecycle.ViewModelProvider
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.android.volley.Request
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import coil.load
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -64,7 +64,7 @@ class InfoFragment : Fragment() {
         val tinyDBObj = TinyDB(context)
         val url = "http://143.42.66.73:9090/api/user/read.php?view=single&username=$username"
         val resp: StringRequest = object : StringRequest(
-            Request.Method.GET, url,
+            Method.GET, url,
             Response.Listener { response ->
                 handleJson(response)
             },
@@ -97,11 +97,12 @@ class InfoFragment : Fragment() {
         val email = jSearchData.getString("userEmail")
         val textView2 = binding.userEmail
         textView2.text = email
+        val avatar = jSearchData.getString("avatar")
+        handleAvatar(avatar)
         val firstname = jSearchData.getString("firstname")
         val lastname = jSearchData.getString("lastname")
         val phone = jSearchData.getString("phone")
         val balance = jSearchData.getString("balance")
-        val avatar = jSearchData.getString("avatar")
         val premiumTier = jSearchData.getString("premiumTier")
         val creditCard = jSearchData.getString("creditCard")
         val issueUser = UserModel(
@@ -128,4 +129,12 @@ class InfoFragment : Fragment() {
         val intent = Intent(context, LoginActivity::class.java)
         context.startActivity(intent)
     }
+
+    private fun handleAvatar(path: String) {
+        val url = "http://143.42.66.73:8080/$path"
+        val imageView = binding.userImage
+        imageView.load(url)
+    }
+
+
 }
