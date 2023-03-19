@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.GridView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -14,6 +15,7 @@ import com.android.volley.toolbox.Volley
 import com.example.app.AppContext
 import com.example.app.data.model.Product
 import com.example.app.databinding.FragmentMenuBinding
+import com.example.app.utility.Adapter
 import org.json.JSONObject
 
 class MenuFragment : Fragment() {
@@ -25,6 +27,8 @@ class MenuFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var menuViewModel: MenuViewModel
+
+    private lateinit var gridView: GridView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,7 +62,11 @@ class MenuFragment : Fragment() {
             val resp: StringRequest = object : StringRequest(
                 Request.Method.GET, url,
                 Response.Listener { response ->
-                    handleJson(response)
+                    val products = handleJson(response)
+                    gridView = binding.gridMenu
+                    //TODO: double check if this is the correct way to pass context
+                    val adapter = Adapter(context, products)
+                    gridView.adapter = adapter
                 },
                 Response.ErrorListener { error ->
                     Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
@@ -76,7 +84,7 @@ class MenuFragment : Fragment() {
     }
 
 
-    private fun handleJson(response: String): Array<Product> {
+    private fun handleJson(response: String): ArrayList<Product> {
         try {
             val jObject = JSONObject(response)
             val productArray = ArrayList<Product>()
@@ -91,26 +99,11 @@ class MenuFragment : Fragment() {
                 val product = Product(id, name, picture, (price.toDouble()), stock.toInt())
                 productArray.add(product)
             }
-            return productArray.toTypedArray()
+            return productArray
         } catch (e: Exception) {
             Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show()
         }
-        return emptyArray()
+        return ArrayList()
     }
 
-//    private fun createUIForProducts(products: Array<Product>) {
-//        val context = AppContext.getContext()
-//        val inflater = LayoutInflater.from(context)
-//        val container = binding.menuContainer
-//        for (product in products) {
-//            val view = inflater.inflate(R.layout.product_item, container, false)
-//            val name = view.findViewById<TextView>(R.id.productName)
-//            val price = view.findViewById<TextView>(R.id.productPrice)
-//            val stock = view.findViewById<TextView>(R.id.productStock)
-//            name.text = product.name
-//            price.text = product.price.toString()
-//            stock.text = product.stock.toString()
-//            container.addView(view)
-//        }
-//    }
 }

@@ -1,43 +1,34 @@
-package com.example.app.utility;
+package com.example.app.utility
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.ImageView
+import android.widget.TextView
+import coil.load
+import com.example.app.R
+import com.example.app.data.model.Product
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.example.app.R;
-import com.example.app.data.model.Product;
-
-import java.util.ArrayList;
-
-public class Adapter extends ArrayAdapter<Product> {
-
-    public Adapter(@NonNull Context context, ArrayList<Product> courseModelArrayList) {
-        super(context, 0, courseModelArrayList);
-    }
-
-    @NonNull
-    @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
-        View listitemView = convertView;
+class Adapter(context: Context, courseModelArrayList: ArrayList<Product>) :
+    ArrayAdapter<Product?>(context, 0, courseModelArrayList as List<Product?>) {
+    @SuppressLint("SetTextI18n")
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+        var listitemView = convertView
         if (listitemView == null) {
             // Layout Inflater inflates each item to be displayed in GridView.
-            listitemView = LayoutInflater.from(getContext()).inflate(R.layout.card_item, parent, false);
+            listitemView = LayoutInflater.from(context).inflate(R.layout.card_item, parent, false)
         }
-
-        Product courseModel = getItem(position);
-//        //TODO: set the text and image of the courseModel to the textview and imageview respectively.
-//        TextView courseTV = listitemView.findViewById(R.id.idTVCourse);
-//        ImageView courseIV = listitemView.findViewById(R.id.idIVcourse);
-//
-//        courseTV.setText(courseModel.getCourse_name());
-//        courseIV.setImageResource(courseModel.getImgid());
-        return listitemView;
+        val product = getItem(position)
+        //        //TODO: set the text and image of the courseModel to the textview and imageview respectively.
+        val productName = listitemView!!.findViewById<TextView>(R.id.product_name)
+        val productImage = listitemView.findViewById<ImageView>(R.id.product_image)
+        productName.text = product!!.name
+        val baseURL = "http://143.42.66.73:8080/"
+        productImage.load(baseURL + product.picture)
+        //        use coil to load image from url to imageview in card_item.xml layout file
+        return listitemView
     }
 }
