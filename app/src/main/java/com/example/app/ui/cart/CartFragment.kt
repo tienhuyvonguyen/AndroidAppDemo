@@ -44,7 +44,6 @@ class CartFragment : Fragment() {
         val root: View = binding.root
 
         val cartList = TinyDB(AppContext.getContext()).getListObject("cart", Cart::class.java)
-        println(cartList.toString())
         if (cartList.isNotEmpty()) {
             val listView = binding.cartList
             val arrayAdapter = ArrayAdapter(this.requireContext(), R.layout.item_view, R.id.itemTextView, cartList)
@@ -52,7 +51,6 @@ class CartFragment : Fragment() {
         } else {
             ArrayAdapter(this.requireContext(), R.layout.item_view, R.id.itemTextView, listOf("Cart is empty"))
         }
-        println("debug in cart")
 
         val checkoutButton = binding.btnCheckout
         checkoutButton.setOnClickListener {
