@@ -54,17 +54,21 @@ class CheckoutActivity : AppCompatActivity() {
 
 
     private fun confirm(cartList : ArrayList<Cart>) {
-        val tinyDB = TinyDB(this)
-        val products = tinyDB.getListObject("products", Product::class.java) as ArrayList<Product>
-        for (item in cartList) {
-            for (product in products) {
-                if (item.productID == product.productID) {
-                    product.stock -= item.productQuantity
-                    doUpdateProduct(item.productID.toInt(), product.stock)
+        try {
+            val tinyDB = TinyDB(this)
+            val products =
+                tinyDB.getListObject("products", Product::class.java) as ArrayList<Product>
+            for (item in cartList) {
+                for (product in products) {
+                    if (item.productID == product.productID) {
+                        product.stock -= item.productQuantity
+                        doUpdateProduct(item.productID.toInt(), product.stock)
+                    }
                 }
             }
+        } catch (e: Exception) {
+            println(e)
         }
-
     }
 
     private fun cancel() {
@@ -85,9 +89,12 @@ class CheckoutActivity : AppCompatActivity() {
                 Toast.makeText(context, "Thanks for your purchased", Toast.LENGTH_LONG).show()
             },
             Response.ErrorListener { error ->
-                val intent = Intent(context, LoginActivity::class.java)
-                startActivity(intent)
-                Toast.makeText(context, "Token expired", Toast.LENGTH_LONG).show()
+                if (error.networkResponse.statusCode == 401) {
+                    val intent = Intent(context, LoginActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(context, "Connection error", Toast.LENGTH_LONG).show()
+                }
             }
         ) {
 

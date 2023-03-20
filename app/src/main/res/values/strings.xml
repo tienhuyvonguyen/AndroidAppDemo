@@ -9,12 +9,14 @@
     <string name="checkout_title">Checkout</string>
     <string name="change_password">Change Password</string>
     <string name="prompt_password">Password</string>
+    <string name="cprompt_password">Confirm Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="action_sign_up">Sign Up</string>
     <string name="welcome">"Welcome !"</string>
     <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="invalid_password">Password must be >8 characters</string>
+    <string name="invalid_confirm_password">Password not match</string>
     <string name="invalid_email">Email not valid</string>
     <string name="login_failed">"Login failed"</string>
     <string name="title_info">PI</string>

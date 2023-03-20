@@ -28,12 +28,14 @@ class RegisterActivity : AppCompatActivity() {
         val password = binding.password
         val email = binding.email
         val register = binding.register
+        val cPassword = binding.confirmPassword
 
         register.setOnClickListener() {
             val testInput = regisDataChange(
                 username.text.toString(),
                 password.text.toString(),
-                email.text.toString()
+                email.text.toString(),
+                cPassword.text.toString()
             )
             if (testInput) {
                 doRegister(username.text.toString(), password.text.toString(), email.text.toString())
@@ -76,13 +78,15 @@ class RegisterActivity : AppCompatActivity() {
         queue.add(req)
     }
 
-    private fun regisDataChange(username: String, password: String, email: String): Boolean {
+    private fun regisDataChange(username: String, password: String, email: String, cPasswd: String): Boolean {
         if (!isUsernameValid(username)) {
             binding.username.error = getString(R.string.invalid_username)
         } else if (!isPasswordValid(password)) {
             binding.password.error = getString(R.string.invalid_password)
         } else if (!isEmailValid(email)) {
             binding.email.error = getString(R.string.invalid_email)
+        } else if (password != cPasswd) {
+            binding.confirmPassword.error = getString(R.string.invalid_confirm_password)
         } else {
             return true
         }
@@ -94,7 +98,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun isPasswordValid(password: String): Boolean {
-        return password.length > 6
+        return password.length > 8
     }
 
     private fun isEmailValid(email: String): Boolean {
