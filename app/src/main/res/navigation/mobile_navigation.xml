@@ -5,18 +5,17 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/navigation_info">
 
+    <fragment
+        android:id="@+id/navigation_menu"
+        android:name="com.example.app.ui.menu.MenuFragment"
+        android:label="@string/title_menu"
+        tools:layout="@layout/fragment_menu" />
 
     <fragment
         android:id="@+id/navigation_info"
         android:name="com.example.app.ui.info.InfoFragment"
         android:label="@string/title_info"
         tools:layout="@layout/fragment_info" />
-
-    <fragment
-        android:id="@+id/navigation_menu"
-        android:name="com.example.app.ui.menu.MenuFragment"
-        android:label="@string/title_menu"
-        tools:layout="@layout/fragment_menu" />
 
     <fragment
         android:id="@+id/navigation_cart"

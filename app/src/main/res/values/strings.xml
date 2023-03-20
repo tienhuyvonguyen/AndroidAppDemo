@@ -2,7 +2,11 @@
     <string name="app_name">Meme Hooker</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
-    <string name="user_info">Personal Information</string>change_password
+    <string name="user_info">Personal Information</string>
+    <string name="back2menu">Back to menu</string>
+    <string name="confirm">Confirm Checkout</string>
+    <string name="cart_title">Cart</string>
+    <string name="checkout_title">Checkout</string>
     <string name="change_password">Change Password</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>

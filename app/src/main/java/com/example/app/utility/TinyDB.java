@@ -461,7 +461,7 @@ public class TinyDB {
     /**
      * Put ObJect any type into SharedPrefrences with 'key' and save
      * @param key SharedPreferences key
-     * @param obj is the Object you want to put 
+     * @param obj is the Object you want to put
      */
     public void putObject(String key, Object obj){
     	checkForNullKey(key);

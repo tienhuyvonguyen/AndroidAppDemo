@@ -1,6 +1,8 @@
 package com.example.app.data.model;
 
 
+import org.jetbrains.annotations.Nullable;
+
 public class Product {
     private String productID;
     private String name;
@@ -15,6 +17,12 @@ public class Product {
         this.productID = productID;
         this.name = name;
         this.picture = picture;
+        this.price = price;
+        this.stock = stock;
+    }
+
+    public Product(@Nullable String productID, @Nullable Double price, @Nullable Integer stock) {
+        this.productID = productID;
         this.price = price;
         this.stock = stock;
     }

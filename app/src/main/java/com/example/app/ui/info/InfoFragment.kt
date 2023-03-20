@@ -69,7 +69,7 @@ class InfoFragment : Fragment() {
                 handleJson(response)
             },
             Response.ErrorListener { error ->
-                Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Token expired", Toast.LENGTH_LONG).show()
             }
         ) {
 

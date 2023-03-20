@@ -45,6 +45,16 @@
         android:layout_height="wrap_content"
         android:text="@string/title_activity_register" />
 
+    <Button
+        android:id="@+id/start_authentication"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Authenticate with Fingerprint"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp" />
+
+
+
 </LinearLayout>
 
 <!--<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->

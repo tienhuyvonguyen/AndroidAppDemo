@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.GridView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -13,9 +14,11 @@ import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.app.AppContext
+import com.example.app.R
 import com.example.app.data.model.Product
 import com.example.app.databinding.FragmentMenuBinding
-import com.example.app.utility.Adapter
+import com.example.app.utility.TinyDB
+import kotlinx.serialization.builtins.UIntArraySerializer
 import org.json.JSONObject
 
 class MenuFragment : Fragment() {
@@ -27,6 +30,7 @@ class MenuFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var menuViewModel: MenuViewModel
+    private lateinit var adapter: MenuAdapter
 
     private lateinit var gridView: GridView
 
@@ -45,7 +49,6 @@ class MenuFragment : Fragment() {
         val root: View = binding.root
 
         doGetProducts()
-
         return root
     }
 
@@ -65,7 +68,7 @@ class MenuFragment : Fragment() {
                     val products = handleJson(response)
                     gridView = binding.gridMenu
                     //TODO: double check if this is the correct way to pass context
-                    val adapter = Adapter(context, products)
+                    val adapter = MenuAdapter(context, products)
                     gridView.adapter = adapter
                 },
                 Response.ErrorListener { error ->
@@ -99,6 +102,7 @@ class MenuFragment : Fragment() {
                 val product = Product(id, name, picture, (price.toDouble()), stock.toInt())
                 productArray.add(product)
             }
+            updateLocalProducts(productArray)
             return productArray
         } catch (e: Exception) {
             Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show()
@@ -106,4 +110,9 @@ class MenuFragment : Fragment() {
         return ArrayList()
     }
 
+    private fun updateLocalProducts(products: ArrayList<Product>) {
+        val tinyDB = TinyDB(context)
+        tinyDB.remove("products")
+        tinyDB.putObject("products", products)
+    }
 }

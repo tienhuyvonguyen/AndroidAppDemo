@@ -19,7 +19,7 @@
             android:id="@+id/grid_menu"
             android:layout_width="410dp"
             android:layout_height="590dp"
-            android:layout_marginBottom="120dp"
+            android:layout_marginBottom="110dp"
             android:horizontalSpacing="6dp"
             android:numColumns="2"
             android:scrollbars="vertical"

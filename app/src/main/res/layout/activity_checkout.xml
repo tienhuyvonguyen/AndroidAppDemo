@@ -5,39 +5,39 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".ui.info.InfoFragment">
+    tools:context=".ui.checkout.CheckoutActivity">
 
     <TextView
-        android:id="@+id/user_info"
+        android:id="@+id/checkout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/user_info"
+        android:text="@string/checkout_title"
         android:textSize="24sp" />
 
     <LinearLayout
         android:layout_width="351dp"
         android:layout_height="437dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="8dp"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/user_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:src="@drawable/ic_launcher_foreground" />
-
         <TextView
-            android:id="@+id/user_name"
-            android:layout_width="237dp"
+            android:id="@+id/total_price"
+            android:layout_width="273dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="valenlucifer"
+            android:text="50$"
+            android:textSize="50sp" />
+
+        <TextView
+            android:id="@+id/fullName"
+            android:layout_width="273dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Huy Vo"
             android:textSize="20sp" />
 
         <TextView
@@ -47,6 +47,15 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:text="tienhuyvonguyen@gmail.com"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/phone"
+            android:layout_width="237dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="0909123123"
             android:textSize="20sp" />
 
     </LinearLayout>
@@ -60,20 +69,21 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/change_password_button"
+            android:id="@+id/btnConfirm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="@string/change_password" />
+            android:text="@string/confirm" />
 
         <Button
-            android:id="@+id/logout_button"
+            android:id="@+id/back2menu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="@string/logout" />
+            android:text="@string/back2menu" />
 
     </LinearLayout>
 
 </LinearLayout>
+

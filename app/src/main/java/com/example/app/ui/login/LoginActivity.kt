@@ -1,8 +1,10 @@
 package com.example.app.ui.login
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Response
 import com.android.volley.VolleyError
@@ -20,6 +22,7 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
 
+    @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -30,17 +33,17 @@ class LoginActivity : AppCompatActivity() {
         val password = binding.password
         val login = binding.login
         val signup = binding.register
-
+        // create a CancellationSignal variable and assign a value null to it
         signup.setOnClickListener {
             register()
         }
-
         login.setOnClickListener {
             val testInput = loginDataChange(username.text.toString(), password.text.toString())
             if (testInput) {
                 doLogin(username.text.toString(), password.text.toString())
             }
         }
+
     }
 
     private fun register() {
@@ -113,4 +116,7 @@ class LoginActivity : AppCompatActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
     }
+
+    //TODO: Biometric Authentication
+
 }
