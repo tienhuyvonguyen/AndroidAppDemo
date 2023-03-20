@@ -6,6 +6,9 @@ public class Cart {
     private Double productPrice;
     private Integer productQuantity;
 
+    public Cart() {
+    }
+
     public Cart(String productID, Double productPrice, Integer productQuantity) {
         this.productID = productID;
         this.productPrice = productPrice;

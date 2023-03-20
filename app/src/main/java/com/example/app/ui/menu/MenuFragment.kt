@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.GridView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -14,11 +13,9 @@ import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.app.AppContext
-import com.example.app.R
 import com.example.app.data.model.Product
 import com.example.app.databinding.FragmentMenuBinding
 import com.example.app.utility.TinyDB
-import kotlinx.serialization.builtins.UIntArraySerializer
 import org.json.JSONObject
 
 class MenuFragment : Fragment() {
@@ -67,7 +64,6 @@ class MenuFragment : Fragment() {
                 Response.Listener { response ->
                     val products = handleJson(response)
                     gridView = binding.gridMenu
-                    //TODO: double check if this is the correct way to pass context
                     val adapter = MenuAdapter(context, products)
                     gridView.adapter = adapter
                 },
@@ -102,7 +98,7 @@ class MenuFragment : Fragment() {
                 val product = Product(id, name, picture, (price.toDouble()), stock.toInt())
                 productArray.add(product)
             }
-            updateLocalProducts(productArray)
+            updateLocalProducts(productArray as ArrayList<Any>)
             return productArray
         } catch (e: Exception) {
             Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show()
@@ -110,9 +106,9 @@ class MenuFragment : Fragment() {
         return ArrayList()
     }
 
-    private fun updateLocalProducts(products: ArrayList<Product>) {
+    private fun updateLocalProducts(products: ArrayList<Any>) {
         val tinyDB = TinyDB(context)
         tinyDB.remove("products")
-        tinyDB.putObject("products", products)
+        tinyDB.putListObject("products", products)
     }
 }

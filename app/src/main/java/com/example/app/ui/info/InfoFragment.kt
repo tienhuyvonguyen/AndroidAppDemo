@@ -69,6 +69,8 @@ class InfoFragment : Fragment() {
                 handleJson(response)
             },
             Response.ErrorListener { error ->
+                val intent = Intent(context, LoginActivity::class.java)
+                startActivity(intent)
                 Toast.makeText(context, "Token expired", Toast.LENGTH_LONG).show()
             }
         ) {

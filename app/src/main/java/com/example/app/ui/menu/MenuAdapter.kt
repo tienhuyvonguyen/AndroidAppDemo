@@ -33,16 +33,19 @@ class MenuAdapter(context: Context, courseModelArrayList: ArrayList<Product>) :
         productImage.load(baseURL + product.picture)
         val addBtn = listitemView.findViewById<Button>(R.id.btn_add_to_cart)
 
-        // TODO: add to cart
         var cartList: ArrayList<Any> = ArrayList()
         addBtn.setOnClickListener {
-            val productToAdd = Cart(
-                product.productID, product.price, 1
-            )
+            val productToAdd : Cart
+            if (product.stock == 0 || product.stock < 0) {
+                Toast.makeText(context, "Out of stock", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            } else {
+                productToAdd = Cart(
+                    product.productID, product.price, 1
+                )
+            }
             cartList = addToCart(productToAdd)
             Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show()
-            println(cartList.toString())
-            println("debug in menu")
         }
 
         return listitemView
