@@ -108,10 +108,12 @@ class InfoFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1) {
             val bitmap = data?.extras?.get("data") as Bitmap
+            println(bitmap.toString())
             binding.userImage.load(bitmap)
         } else if (requestCode == 2) {
             val uri = data?.data
             val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, uri)
+            println(bitmap.toString())
             binding.userImage.load(bitmap)
         }
     }
