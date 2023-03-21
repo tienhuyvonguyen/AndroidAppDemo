@@ -16,6 +16,7 @@ import com.example.app.AppContext
 import com.example.app.data.model.UserModel
 import com.example.app.databinding.FragmentInfoBinding
 import com.example.app.ui.login.LoginActivity
+import com.example.app.ui.updatePassword.UpdateActivity
 import com.example.app.utility.TinyDB
 import org.json.JSONObject
 
@@ -45,6 +46,11 @@ class InfoFragment : Fragment() {
 
         binding.logoutButton.setOnClickListener {
             doLogout()
+        }
+
+        binding.changePasswordButton.setOnClickListener {
+            val intent = Intent(context, UpdateActivity::class.java)
+            startActivity(intent)
         }
 
         val tinyDBObj = TinyDB(AppContext.getContext())
@@ -109,6 +115,7 @@ class InfoFragment : Fragment() {
         val lastname = jSearchData.getString("lastname")
         val phone = jSearchData.getString("phone")
         val balance = jSearchData.getString("balance")
+        val balanceView = binding.balance
         val premiumTier = jSearchData.getString("premiumTier")
         val creditCard = jSearchData.getString("creditCard")
         val issueUser = UserModel(
@@ -130,7 +137,6 @@ class InfoFragment : Fragment() {
         val tinyDBObj = TinyDB(context)
         tinyDBObj.remove("token")
         tinyDBObj.remove("user")
-        tinyDBObj.clear()
         Toast.makeText(context, "Logout successful", Toast.LENGTH_SHORT).show()
         val intent = Intent(context, LoginActivity::class.java)
         context.startActivity(intent)

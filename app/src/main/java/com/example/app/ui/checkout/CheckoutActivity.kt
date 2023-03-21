@@ -17,7 +17,6 @@ import com.example.app.data.model.UserModel
 import com.example.app.databinding.ActivityCheckoutBinding
 import com.example.app.ui.login.LoginActivity
 import com.example.app.utility.TinyDB
-import kotlinx.coroutines.NonCancellable.cancel
 
 class CheckoutActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCheckoutBinding

@@ -49,6 +49,15 @@
             android:text="tienhuyvonguyen@gmail.com"
             android:textSize="20sp" />
 
+        <TextView
+            android:id="@+id/balance"
+            android:layout_width="273dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="50.4"
+            android:textSize="20sp" />
+
     </LinearLayout>
 
     <LinearLayout

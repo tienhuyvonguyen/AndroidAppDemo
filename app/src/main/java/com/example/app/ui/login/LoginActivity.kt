@@ -1,22 +1,30 @@
 package com.example.app.ui.login
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
 import com.android.volley.Response
-import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.app.AppContext
 import com.example.app.MainActivity
-import com.example.app.R
 import com.example.app.databinding.ActivityLoginBinding
 import com.example.app.ui.register.RegisterActivity
 import com.example.app.utility.TinyDB
 import org.json.JSONObject
+import java.util.concurrent.Executor
 
+import androidx.annotation.NonNull
 
 class LoginActivity : AppCompatActivity() {
 
@@ -43,7 +51,7 @@ class LoginActivity : AppCompatActivity() {
                 doLogin(username.text.toString(), password.text.toString())
             }
         }
-
+        //TODO: biometric authentication
     }
 
     private fun register() {
@@ -53,10 +61,10 @@ class LoginActivity : AppCompatActivity() {
 
     private fun loginDataChange(username: String, password: String): Boolean {
         if (!isUserNameValid(username)) {
-            binding.username.error = getString(R.string.invalid_username)
+            binding.username.error = getString(com.example.app.R.string.invalid_username)
             Toast.makeText(applicationContext, "Invalid Username", Toast.LENGTH_SHORT).show()
         } else if (!isPasswordValid(password)) {
-            binding.password.error = getString(R.string.invalid_password)
+            binding.password.error = getString(com.example.app.R.string.invalid_password)
             Toast.makeText(applicationContext, "Invalid Password", Toast.LENGTH_SHORT).show()
         } else {
             return true
@@ -65,6 +73,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun doLogin(username: String, password: String) {
+        val context = AppContext.getContext()
         val url = "http://143.42.66.73:9090/public/api/login.php"
         val queue = Volley.newRequestQueue(this@LoginActivity)
         val req: StringRequest = object : StringRequest(
@@ -73,12 +82,14 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this@LoginActivity, "Login Success", Toast.LENGTH_SHORT).show()
                 onLoginSuccess(response, username)
             },
-            Response.ErrorListener { error: VolleyError ->
-                Toast.makeText(
-                    this@LoginActivity,
-                    "Connection Failed: $error",
-                    Toast.LENGTH_SHORT
-                ).show()
+            Response.ErrorListener { error ->
+                if (error.networkResponse.statusCode == 400) {
+                    Toast.makeText(context, "Invalid Credentials", Toast.LENGTH_LONG).show()
+                    val intent = Intent(context, LoginActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(context, "Connection error", Toast.LENGTH_LONG).show()
+                }
             }) {
             override fun getParams(): Map<String, String> {
                 // below line we are creating a map for
@@ -118,5 +129,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     //TODO: Biometric Authentication
+
 
 }
