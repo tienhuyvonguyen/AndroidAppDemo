@@ -41,7 +41,11 @@ class CheckoutActivity : AppCompatActivity() {
         binding.fullName.text = user.firstName + " " + user.lastName
         binding.userEmail.text = user.email
         binding.phone.text = user.phone
-
+        val userBalance = user.balance
+        if (userBalance < totalPrice) {
+            confirmButton.isEnabled = false
+            Toast.makeText(this, "Your balance is not enough", Toast.LENGTH_LONG).show()
+        }
         confirmButton.setOnClickListener() {
             confirm(cartList)
             tinyDB.remove("cart")

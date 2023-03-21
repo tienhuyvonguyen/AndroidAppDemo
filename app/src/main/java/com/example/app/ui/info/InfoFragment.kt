@@ -1,11 +1,13 @@
 package com.example.app.ui.info
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import coil.load
@@ -30,6 +32,7 @@ class InfoFragment : Fragment() {
 
     private lateinit var infoView: InfoViewModel
 
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -53,6 +56,11 @@ class InfoFragment : Fragment() {
             startActivity(intent)
         }
 
+        binding.changeAvatar.setOnClickListener() {
+
+            handleAvatarChange()
+        }
+
         val tinyDBObj = TinyDB(AppContext.getContext())
         doGetUserInfo(tinyDBObj.getString("username"))
 
@@ -64,6 +72,53 @@ class InfoFragment : Fragment() {
         _binding = null
     }
 
+    private fun handleAvatarChange() {
+
+
+    }
+
+    private fun doFileUpload() {
+        val context = AppContext.getContext()
+        val queue = Volley.newRequestQueue(context)
+        val tinyDBObj = TinyDB(context)
+        val url = ""
+        val resp: StringRequest = object : StringRequest(
+            Method.POST, url,
+            Response.Listener { response ->
+            },
+            Response.ErrorListener { error ->
+                if (error.networkResponse.statusCode == 401) {
+                    Toast.makeText(context, "Token expired", Toast.LENGTH_LONG).show()
+                    val intent = Intent(context, LoginActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(context, "Connection error", Toast.LENGTH_LONG).show()
+                }
+            }
+        ) {
+
+            override fun getBodyContentType(): String {
+                return "application/json; charset=utf-8"
+            }
+
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                headers["Content-Type"] = "application/json"
+                headers["Authorization"] = "Bearer " + tinyDBObj.getString("token")
+                return headers
+            }
+        }
+    }
+
+    private fun requestPermission() {
+        requestPermissions(
+            arrayOf(
+                android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                android.Manifest.permission.CAMERA
+            ), 1
+        )
+    }
     private fun doGetUserInfo(username: String) {
         val context = AppContext.getContext()
         val queue = Volley.newRequestQueue(context)
@@ -116,6 +171,7 @@ class InfoFragment : Fragment() {
         val phone = jSearchData.getString("phone")
         val balance = jSearchData.getString("balance")
         val balanceView = binding.balance
+        balanceView.text = balance
         val premiumTier = jSearchData.getString("premiumTier")
         val creditCard = jSearchData.getString("creditCard")
         val issueUser = UserModel(
@@ -147,6 +203,4 @@ class InfoFragment : Fragment() {
         val imageView = binding.userImage
         imageView.load(url)
     }
-
-
 }

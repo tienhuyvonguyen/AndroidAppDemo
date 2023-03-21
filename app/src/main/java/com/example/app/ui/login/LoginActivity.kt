@@ -1,18 +1,14 @@
 package com.example.app.ui.login
 
+import android.R
 import android.content.Intent
-import android.graphics.Color
+import android.hardware.biometrics.BiometricManager
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.biometric.BiometricManager
-import androidx.biometric.BiometricPrompt
-import androidx.core.content.ContextCompat
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -22,9 +18,7 @@ import com.example.app.databinding.ActivityLoginBinding
 import com.example.app.ui.register.RegisterActivity
 import com.example.app.utility.TinyDB
 import org.json.JSONObject
-import java.util.concurrent.Executor
 
-import androidx.annotation.NonNull
 
 class LoginActivity : AppCompatActivity() {
 
@@ -52,6 +46,10 @@ class LoginActivity : AppCompatActivity() {
             }
         }
         //TODO: biometric authentication
+        val btnBioAuthen = binding.startAuthentication
+        btnBioAuthen.setOnClickListener {
+            //start authentication
+        }
     }
 
     private fun register() {

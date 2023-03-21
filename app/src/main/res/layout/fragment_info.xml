@@ -28,9 +28,17 @@
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
             android:src="@drawable/ic_launcher_foreground" />
 
+        <TextView
+            android:id="@+id/changeAvatar"
+            android:text="Change Avatar"
+            android:layout_marginBottom="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:clickable="true"/>
+s
         <TextView
             android:id="@+id/user_name"
             android:layout_width="237dp"
