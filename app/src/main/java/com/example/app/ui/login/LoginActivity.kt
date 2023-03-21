@@ -83,8 +83,6 @@ class LoginActivity : AppCompatActivity() {
             Response.ErrorListener { error ->
                 if (error.networkResponse.statusCode == 400) {
                     Toast.makeText(context, "Invalid Credentials", Toast.LENGTH_LONG).show()
-                    val intent = Intent(context, LoginActivity::class.java)
-                    startActivity(intent)
                 } else {
                     Toast.makeText(context, "Connection error", Toast.LENGTH_LONG).show()
                 }

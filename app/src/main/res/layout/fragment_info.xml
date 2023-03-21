@@ -24,8 +24,8 @@
 
         <ImageView
             android:id="@+id/user_image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:src="@drawable/ic_launcher_foreground" />
@@ -33,6 +33,7 @@
         <TextView
             android:id="@+id/changeAvatar"
             android:text="Change Avatar"
+            android:textColor="@color/colorAccent"
             android:layout_marginBottom="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
