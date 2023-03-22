@@ -37,6 +37,7 @@ android {
 }
 
 dependencies {
+    implementation("ru.gildor.coroutines:kotlin-coroutines-okhttp:1.0")
     implementation 'androidx.biometric:biometric:1.1.0'
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
     implementation("io.coil-kt:coil:2.2.2")

@@ -2,9 +2,9 @@ package com.example.app.ui.info
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.app.ProgressDialog.show
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -27,9 +27,17 @@ import com.example.app.ui.login.LoginActivity
 import com.example.app.ui.updatePassword.UpdateActivity
 import com.example.app.utility.TinyDB
 import com.example.app.utility.VolleyMultipartRequest
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
+import okhttp3.RequestBody
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.util.*
 import kotlin.collections.set
 
@@ -46,15 +54,11 @@ class InfoFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        infoView =
-            ViewModelProvider(
-                this,
-                ViewModelProvider.NewInstanceFactory()
-            ).get(InfoViewModel::class.java)
+        infoView = ViewModelProvider(
+            this, ViewModelProvider.NewInstanceFactory()
+        ).get(InfoViewModel::class.java)
 
         _binding = FragmentInfoBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -94,9 +98,7 @@ class InfoFragment : Fragment() {
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
+        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (grantResults.isNotEmpty() && grantResults[0] == android.content.pm.PackageManager.PERMISSION_GRANTED) {
@@ -115,14 +117,21 @@ class InfoFragment : Fragment() {
     private fun chooseWayToUpload() {
         val builder = AlertDialog.Builder(context)
         builder.setTitle("Choose way to upload")
-        builder.setPositiveButton("Camera") { dialog, which ->
-            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            startActivityForResult(intent, 1)
-        }
-        builder.setNegativeButton("Gallery") { dialog, which ->
-            val intent = Intent(Intent.ACTION_PICK)
-            intent.type = "image/*"
-            startActivityForResult(intent, 2)
+        builder.setItems(arrayOf("Camera", "Gallery", "Cancel")) { dialog, which ->
+            when (which) {
+                0 -> {
+                    val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                    startActivityForResult(intent, 1)
+                }
+                1 -> {
+                    val intent = Intent(Intent.ACTION_PICK)
+                    intent.type = "image/*"
+                    startActivityForResult(intent, 2)
+                }
+                2 -> {
+                    dialog.dismiss()
+                }
+            }
         }
         builder.show()
     }
@@ -132,12 +141,12 @@ class InfoFragment : Fragment() {
         if (requestCode == 1) {
             val bitmap = data?.extras?.get("data") as Bitmap
             binding.userImage.setImageBitmap(bitmap)
-            Log.d("image", bitmap.toString())
+            uploadBitmap(bitmap)
         } else if (requestCode == 2) {
             val uri = data?.data
             val bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, uri)
             binding.userImage.load(bitmap)
-            Log.d("image", bitmap.toString())
+            uploadBitmap(bitmap)
         }
     }
 
@@ -146,12 +155,10 @@ class InfoFragment : Fragment() {
         val queue = Volley.newRequestQueue(context)
         val tinyDBObj = TinyDB(context)
         val url = "http://143.42.66.73:9090/api/user/read.php?view=single&username=$username"
-        val resp: StringRequest = object : StringRequest(
-            Method.GET, url,
-            Response.Listener { response ->
+        val resp: StringRequest =
+            object : StringRequest(Method.GET, url, Response.Listener { response ->
                 handleJson(response)
-            },
-            Response.ErrorListener { error ->
+            }, Response.ErrorListener { error ->
                 if (error.networkResponse.statusCode == 401) {
                     Toast.makeText(context, "Token expired", Toast.LENGTH_LONG).show()
                     val intent = Intent(context, LoginActivity::class.java)
@@ -159,20 +166,19 @@ class InfoFragment : Fragment() {
                 } else {
                     Toast.makeText(context, "Connection error", Toast.LENGTH_LONG).show()
                 }
-            }
-        ) {
+            }) {
 
-            override fun getBodyContentType(): String {
-                return "application/json; charset=utf-8"
-            }
+                override fun getBodyContentType(): String {
+                    return "application/json; charset=utf-8"
+                }
 
-            override fun getHeaders(): MutableMap<String, String> {
-                val headers = HashMap<String, String>()
-                headers["Content-Type"] = "application/json"
-                headers["Authorization"] = "Bearer " + tinyDBObj.getString("token")
-                return headers
+                override fun getHeaders(): MutableMap<String, String> {
+                    val headers = HashMap<String, String>()
+                    headers["Content-Type"] = "application/json"
+                    headers["Authorization"] = "Bearer " + tinyDBObj.getString("token")
+                    return headers
+                }
             }
-        }
         queue.add(resp)
     }
 
@@ -227,19 +233,36 @@ class InfoFragment : Fragment() {
         imageView.load(url)
     }
 
-    private fun onUpdateAvatarSuccess(resp: String) {
-        val jObject = JSONObject(resp)
-        val avatarPath = jObject.getString("avatar").substring(0, 13)
-        println(avatarPath)
-        handleAvatar(avatarPath)
-    }
-
-    fun getFileDataFromDrawable(bitmap: Bitmap): ByteArray? {
+    private fun getFileDataFromDrawable(bitmap: Bitmap): ByteArray? {
         val byteArrayOutputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 80, byteArrayOutputStream)
+        bitmap.compress(Bitmap.CompressFormat.PNG, 10, byteArrayOutputStream)
         return byteArrayOutputStream.toByteArray()
     }
+    private fun uploadBitmap(bitmap: Bitmap) {
+        val tinyDBObj = TinyDB(AppContext.getContext())
+        val volleyMultipartRequest = object : VolleyMultipartRequest(
+            Request.Method.POST,
+            "http://143.42.66.73:9090/api/user/uploadAvatar.php",
+            Response.Listener<NetworkResponse>() { response ->
+                Toast.makeText(AppContext.getContext(), "Update Success", Toast.LENGTH_LONG).show()
+            },
+            Response.ErrorListener {error ->
+                Toast.makeText(AppContext.getContext(), "Error", Toast.LENGTH_LONG).show()
+            }
+        ) {
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                headers["Authorization"] = "Bearer " + tinyDBObj.getString("token")
+                return headers
+            }
 
-
-
+            override fun getByteData(): MutableMap<String, DataPart> {
+                val params = HashMap<String, DataPart>()
+                val imageData = System.currentTimeMillis().toString() + ".png"
+                params.put("avatar", DataPart(imageData, getFileDataFromDrawable(bitmap)))
+                return params
+            }
+        }
+        Volley.newRequestQueue(AppContext.getContext()).add(volleyMultipartRequest)
+    }
 }
