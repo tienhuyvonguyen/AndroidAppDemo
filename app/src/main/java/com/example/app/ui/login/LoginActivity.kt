@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import coil.load
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -35,6 +36,7 @@ class LoginActivity : AppCompatActivity() {
         val password = binding.password
         val login = binding.login
         val signup = binding.register
+        binding.appIcon.load("http://143.42.66.73:9090/uploads/save/1679506290693.png")
         // create a CancellationSignal variable and assign a value null to it
         signup.setOnClickListener {
             register()
@@ -45,7 +47,6 @@ class LoginActivity : AppCompatActivity() {
                 doLogin(username.text.toString(), password.text.toString())
             }
         }
-        //TODO: biometric authentication
         val btnBioAuthen = binding.startAuthentication
         btnBioAuthen.setOnClickListener {
             //start authentication
