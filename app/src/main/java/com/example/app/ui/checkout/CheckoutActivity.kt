@@ -15,11 +15,13 @@ import com.example.app.data.model.Cart
 import com.example.app.data.model.Product
 import com.example.app.data.model.UserModel
 import com.example.app.databinding.ActivityCheckoutBinding
+import com.example.app.ui.info.InfoFragment
 import com.example.app.ui.login.LoginActivity
 import com.example.app.utility.TinyDB
 
 class CheckoutActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCheckoutBinding
+    private lateinit var userBinding: InfoFragment
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +58,7 @@ class CheckoutActivity : AppCompatActivity() {
     }
 
 
-    private fun confirm(cartList : ArrayList<Cart>) {
+    private fun confirm(cartList: ArrayList<Cart>) {
         try {
             val tinyDB = TinyDB(this)
             val products =
