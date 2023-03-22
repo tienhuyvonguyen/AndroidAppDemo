@@ -1,5 +1,6 @@
 package com.example.app.ui.info;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.widget.Toast;
 
@@ -9,6 +10,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.example.app.AppContext;
 import com.example.app.utility.VolleyMultipartRequest;
 
 import org.json.JSONException;
@@ -30,6 +32,7 @@ public class UploadAvatar {
         //getting the tag from the edittext
         final String tags = editTextTags.getText().toString().trim();
         final String UPLOAD_URL = "http://";
+        final Context context = AppContext.getContext();
         //our custom volley request
         VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(Request.Method.POST, UPLOAD_URL,
                 new Response.Listener<NetworkResponse>() {
@@ -37,7 +40,7 @@ public class UploadAvatar {
                     public void onResponse(NetworkResponse response) {
                         try {
                             JSONObject obj = new JSONObject(new String(response.data));
-                            Toast.makeText(, obj.getString("message"), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, obj.getString("message"), Toast.LENGTH_SHORT).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -46,7 +49,7 @@ public class UploadAvatar {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }) {
 
@@ -76,6 +79,6 @@ public class UploadAvatar {
         };
 
         //adding the request to volley
-        Volley.newRequestQueue(this).add(volleyMultipartRequest);
+        Volley.newRequestQueue(context).add(volleyMultipartRequest);
     }
 }
