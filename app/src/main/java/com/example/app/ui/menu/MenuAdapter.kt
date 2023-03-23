@@ -28,7 +28,7 @@ class MenuAdapter(context: Context, courseModelArrayList: ArrayList<Product>) :
         val productPrice = listitemView.findViewById<TextView>(R.id.product_price)
         productName.text = product!!.name
         productStock.text = "Stock: " + product.stock.toString()
-        productPrice.text = "Price: " + product.price.toString()
+        productPrice.text = "Price: " + product.price.toString() + " $"
         val baseURL = "http://143.42.66.73:8080/"
         productImage.load(baseURL + product.picture)
         val addBtn = listitemView.findViewById<Button>(R.id.btn_add_to_cart)

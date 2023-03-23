@@ -66,6 +66,12 @@ class InfoFragment : Fragment() {
         val tinyDBObj = TinyDB(AppContext.getContext())
         doGetUserInfo(tinyDBObj.getString("username"))
 
+        binding.topupButton.isEnabled = false
+        binding.topupButton.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse("https://www.paypal.com/vn/home")
+            startActivity(intent)
+        }
 
         binding.logoutButton.setOnClickListener {
             doLogout()

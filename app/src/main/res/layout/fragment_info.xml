@@ -68,6 +68,14 @@ s
             android:text="50.4"
             android:textSize="20sp" />
 
+        <Button
+            android:id="@+id/topup_button"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:text="Top up balance" />
+
     </LinearLayout>
 
     <LinearLayout

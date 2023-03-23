@@ -49,6 +49,7 @@ class CheckoutActivity : AppCompatActivity() {
             Toast.makeText(this, "Your balance is not enough", Toast.LENGTH_LONG).show()
         }
         confirmButton.setOnClickListener() {
+            updateBalance(userBalance - totalPrice)
             confirm(cartList)
             tinyDB.remove("cart")
         }
@@ -58,6 +59,53 @@ class CheckoutActivity : AppCompatActivity() {
     }
 
     //TODO: update user balance
+    private fun updateBalance(balance: Double) {
+        val context = AppContext.getContext()
+        val queue = Volley.newRequestQueue(context)
+        val tinyDBObj = TinyDB(context)
+        val url = "http://143.42.66.73:9090/api/user/update.php"
+        val resp: StringRequest = object : StringRequest(
+            Method.PUT, url,
+            Response.Listener { response ->
+            },
+            Response.ErrorListener { error ->
+                if (error.networkResponse.statusCode == 401) {
+                    Toast.makeText(context, "Token expired", Toast.LENGTH_LONG).show()
+                    val intent = Intent(context, LoginActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(context, "Connection error", Toast.LENGTH_LONG).show()
+                }
+            }
+        ) {
+
+            override fun getBodyContentType(): String {
+                return "application/json; charset=utf-8"
+            }
+
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                headers["Content-Type"] = "application/json"
+                headers["Authorization"] = "Bearer " + tinyDBObj.getString("token")
+                return headers
+            }
+
+            override fun getParams(): Map<String, String> {
+                // below line we are creating a map for
+                // storing our values in key and value pair.
+                val params: MutableMap<String, String> = HashMap()
+
+                // on below line we are passing our key
+                // and value pair to our parameters.
+                params["balance"] = balance.toString()
+
+                // at last we are
+                // returning our params.
+                return params
+            }
+        }
+        queue.add(resp)
+    }
 
     private fun confirm(cartList: ArrayList<Cart>) {
         try {
@@ -72,6 +120,7 @@ class CheckoutActivity : AppCompatActivity() {
                     }
                 }
             }
+
         } catch (e: Exception) {
             println(e)
         }
