@@ -57,6 +57,7 @@ class CheckoutActivity : AppCompatActivity() {
         }
     }
 
+    //TODO: update user balance
 
     private fun confirm(cartList: ArrayList<Cart>) {
         try {
