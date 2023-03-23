@@ -68,7 +68,7 @@ class MenuFragment : Fragment() {
                     gridView.adapter = adapter
                 },
                 Response.ErrorListener { error ->
-                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Fail to fetch data", Toast.LENGTH_SHORT).show()
                 }
             ) {
 
@@ -101,7 +101,7 @@ class MenuFragment : Fragment() {
             updateLocalProducts(productArray as ArrayList<Any>)
             return productArray
         } catch (e: Exception) {
-            Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Fail to fetch data", Toast.LENGTH_SHORT).show()
         }
         return ArrayList()
     }

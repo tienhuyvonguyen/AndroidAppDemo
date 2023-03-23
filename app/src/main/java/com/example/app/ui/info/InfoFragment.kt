@@ -253,7 +253,7 @@ class InfoFragment : Fragment() {
                 Toast.makeText(AppContext.getContext(), "Update Success", Toast.LENGTH_LONG).show()
             },
             Response.ErrorListener {error ->
-                Toast.makeText(AppContext.getContext(), "Error", Toast.LENGTH_LONG).show()
+                Toast.makeText(AppContext.getContext(), "Update Error", Toast.LENGTH_LONG).show()
             }
         ) {
             override fun getHeaders(): MutableMap<String, String> {

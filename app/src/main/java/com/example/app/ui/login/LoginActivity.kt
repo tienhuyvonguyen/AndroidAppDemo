@@ -50,6 +50,7 @@ class LoginActivity : AppCompatActivity() {
             }
         }
         val btnBioAuthen = binding.startAuthentication
+        btnBioAuthen.isEnabled = false
         btnBioAuthen.setOnClickListener {
             //start authentication
         }

@@ -38,7 +38,11 @@ class RegisterActivity : AppCompatActivity() {
                 cPassword.text.toString()
             )
             if (testInput) {
-                doRegister(username.text.toString(), password.text.toString(), email.text.toString())
+                doRegister(
+                    username.text.toString(),
+                    password.text.toString(),
+                    email.text.toString()
+                )
             }
         }
     }
@@ -54,11 +58,16 @@ class RegisterActivity : AppCompatActivity() {
                 startActivity(intent)
             },
             Response.ErrorListener { error: VolleyError ->
-                Toast.makeText(
-                    this@RegisterActivity,
-                    "Fail to get response = $error",
-                    Toast.LENGTH_SHORT
-                ).show()
+                if (error.networkResponse.statusCode == 400) {
+                    Toast.makeText(
+                        this@RegisterActivity,
+                        "Username or Email already exists",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(this@RegisterActivity, "Register Failed", Toast.LENGTH_SHORT)
+                        .show()
+                }
             }) {
             override fun getParams(): Map<String, String> {
                 // below line we are creating a map for
@@ -78,7 +87,12 @@ class RegisterActivity : AppCompatActivity() {
         queue.add(req)
     }
 
-    private fun regisDataChange(username: String, password: String, email: String, cPasswd: String): Boolean {
+    private fun regisDataChange(
+        username: String,
+        password: String,
+        email: String,
+        cPasswd: String
+    ): Boolean {
         if (!isUsernameValid(username)) {
             binding.username.error = getString(R.string.invalid_username)
         } else if (!isPasswordValid(password)) {
