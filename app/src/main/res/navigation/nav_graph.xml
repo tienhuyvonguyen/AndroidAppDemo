@@ -3,34 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    android:label="navigation graph"
+    app:startDestination="@+id/fragmentMenu">
 
     <fragment
-        android:id="@+id/FirstFragment"
+        android:id="@+id/fragmentMenu"
         android:name="com.example.app.ui.menu.MenuFragment"
         tools:layout="@layout/fragment_menu">
-
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_Login_to_Menu"
+            app:destination="@id/fragmentMenu" />
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
         android:name="com.example.app.ui.info.InfoFragment"
         tools:layout="@layout/fragment_info">
-
         <action
-            android:id="@+id/action_SecondFragment_to_ThirdFragment"
-            app:destination="@id/ThirdFragment" />
+            android:id="@+id/action_InfoFragment_to_FirstFragment"
+            app:destination="@id/SecondFragment" />
     </fragment>
-
     <fragment
         android:id="@+id/ThirdFragment"
         android:name="com.example.app.ui.cart.CartFragment"
         tools:layout="@layout/fragment_cart">
-
-        <action
-            android:id="@+id/action_ThirdFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
     </fragment>
 </navigation>
