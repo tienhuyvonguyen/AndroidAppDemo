@@ -26,5 +26,14 @@
             android:verticalSpacing="6dp"
             tools:layout_editor_absoluteX="2dp"
             tools:layout_editor_absoluteY="0dp" />
+
+        <!--on below line we are creating a progress bar-->
+        <ProgressBar
+            android:id="@+id/idPBLoading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="20dp"
+            android:visibility="gone" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
